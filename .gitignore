@@ -1,0 +1,9 @@
+# backend secrets
+Backend/.env
+
+# node modules
+Backend/node_modules
+Frontend/node_modules
+
+# logs
+*.log

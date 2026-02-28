@@ -16,7 +16,7 @@ const Login = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
 
     if (formData.email.trim().length === 0) {
       toast.error("Please enter Email");
@@ -43,7 +43,7 @@ const Login = () => {
     toast.success("Login Successful");
     console.log(formData);
 
-    // 👉 Later: call API and navigate
+    
   };
 
   return (
@@ -54,7 +54,7 @@ const Login = () => {
             Login to Your Account
           </h2>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4">
             
             <input
               type="email"
@@ -75,7 +75,7 @@ const Login = () => {
             />
 
             <button
-              type="submit"
+              type="button" onSubmit={handleSubmit}
               className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer"
             >
               Login

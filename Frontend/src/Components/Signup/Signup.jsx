@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import Layout from "../../Layout/Layout";
 import { toast } from "react-toastify";
+import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate=useNavigate();
+
   const [formData, setformData] = useState({
     fullname: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -17,7 +20,7 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.fullname.trim().length === 0) {
@@ -30,7 +33,6 @@ const Signup = () => {
       return;
     }
 
-   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(formData.email.trim())) {
@@ -43,13 +45,27 @@ const Signup = () => {
       return;
     }
 
-    if (formData.password.trim() !== formData.confirmPassword.trim()) {
-      toast.error("Passwords do not match");
-      return;
+    try {
+      const res = await axios.post("http://localhost:8080/user/register", {
+        fullname:formData.fullname,
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success(res.data.message);
+      setformData({
+        fullname: "",
+        email: "",
+        password: "",
+      });
+
+      navigate('/login')
+
+    } catch (err) {
+      console.log(err.response)
+      toast.error(err.response?.data?.message);
     }
 
-    toast.success("Signup Successful");
-    console.log(formData);
+    
   };
   return (
     <Layout>
@@ -87,15 +103,6 @@ const Signup = () => {
               onChange={handleChange}
             />
 
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              name="confirmpassword"
-              className="border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
-              onChange={handleChange}
-            />
-
             <button
               type="submit"
               className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer"
@@ -103,7 +110,12 @@ const Signup = () => {
               Sign Up
             </button>
           </form>
-          <p className="m-1">Already have an account? <a href="/login" className="text-blue-600">Login</a> </p>
+          <p className="m-1">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-600">
+              Login
+            </a>{" "}
+          </p>
         </div>
       </div>
     </Layout>
