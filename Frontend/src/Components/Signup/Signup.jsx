@@ -61,7 +61,8 @@ const Signup = () => {
       navigate('/login')
 
     } catch (err) {
-      console.log(err.response)
+     // console.log(err.response)
+     
       toast.error(err.response?.data?.message);
     }
 

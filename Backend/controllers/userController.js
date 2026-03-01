@@ -1,6 +1,21 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const jwt=require("jsonwebtoken");
+require('dotenv').config();
 
+//function to generate token 
+const generateToken=(user)=>{
+
+  const token=jwt.sign({id:user._id,email:user.email},
+    process.env.JWT_SECRET_KEY,
+    {expiresIn:"1d"}
+  )
+
+  return token;
+  
+};
+
+//To register user
 const registerUser = async (req, res) => {
   try {
     const { fullname, email, password } = req.body;
@@ -35,4 +50,29 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser };
+//To login user
+const loginUser=async(req,res)=>{
+
+  try{
+      const {email,password}=req.body;
+
+  //check whether there is a user or not with this email
+  const user=await User.findOne({email});
+  if(!user) return res.status(400).json({message:"No registered user with this email !"});
+
+  //now check credentials is correct or not
+  const isMatch=await bcrypt.compare(password,user.password);
+  if(!isMatch) return res.status(400).json({message:"Invalid credentials !"});
+
+  //generate token
+  const token=generateToken(user);
+
+  res.json({message:"LoggedIn Successfull !",token});
+
+  }
+  catch(err){
+    res.status(500).json({error:err.message});
+  }
+}
+
+module.exports = { registerUser,loginUser };

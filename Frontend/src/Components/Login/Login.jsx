@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../../Layout/Layout";
 import { toast } from "react-toastify";
-
+import axios from "axios"
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -15,8 +15,8 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    //e.preventDefault();
+  const handleSubmit = async(e) => {
+    e.preventDefault();
 
     if (formData.email.trim().length === 0) {
       toast.error("Please enter Email");
@@ -40,9 +40,22 @@ const Login = () => {
       return;
     }
 
-    toast.success("Login Successful");
-    console.log(formData);
-
+   
+    try{
+      const res=await axios.post('http://localhost:8080/user/login',{
+        email:formData.email,
+        password:formData.password
+      });
+      toast.success(res.data.message);
+      setFormData({
+        email:"",
+        password:""
+      });
+    }
+    catch(error){
+        console.log(error.response);
+        toast.error(error.response?.data?.message);
+    }
     
   };
 
@@ -54,7 +67,7 @@ const Login = () => {
             Login to Your Account
           </h2>
 
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             
             <input
               type="email"
@@ -75,7 +88,7 @@ const Login = () => {
             />
 
             <button
-              type="button" onSubmit={handleSubmit}
+              type="submit" 
               className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer"
             >
               Login
