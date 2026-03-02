@@ -1,13 +1,13 @@
 import React from 'react'
 import Layout from '../../Layout/Layout'
+import Hero from '../Hero/Hero';
 
 const Home = () => {
   return (
     <Layout>
      
-      <div className="p-8">
-        <h1 className="text-3xl font-bold text-center">Home Page</h1>
-        <p className="mt-4 text-center">Welcome back!</p>
+      <div className="mt-[100px]">
+       <Hero/>
       </div>
     </Layout>
   )
