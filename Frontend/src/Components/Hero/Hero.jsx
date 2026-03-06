@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section className="w-full min-h-screen bg-gradient-to-r from-blue-50 via-white to-blue-100 flex items-center">
+   <section className="w-full min-h-[calc(100vh-64px)] bg-gradient-to-r from-blue-50 via-white to-blue-100 flex items-center">
 
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 px-6 md:px-12 items-center">
 

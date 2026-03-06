@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Layout from "../../Layout/Layout";
 import { toast } from "react-toastify";
-import axios from "axios"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ContextStore from "../../context/contextStore";
+
 const Login = () => {
+  const { token, setToken } = useContext(ContextStore);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -15,7 +21,7 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.email.trim().length === 0) {
@@ -40,23 +46,25 @@ const Login = () => {
       return;
     }
 
-   
-    try{
-      const res=await axios.post('http://localhost:8080/user/login',{
-        email:formData.email,
-        password:formData.password
+    try {
+      const res = await axios.post("http://localhost:8080/user/login", {
+        email: formData.email,
+        password: formData.password,
       });
       toast.success(res.data.message);
       setFormData({
-        email:"",
-        password:""
+        email: "",
+        password: "",
       });
+
+      localStorage.setItem("token", res.data.token);
+      setToken(localStorage.getItem("token"));
+
+      navigate("/");
+    } catch (error) {
+      console.log(error.response);
+      toast.error(error.response?.data?.message);
     }
-    catch(error){
-        console.log(error.response);
-        toast.error(error.response?.data?.message);
-    }
-    
   };
 
   return (
@@ -68,7 +76,6 @@ const Login = () => {
           </h2>
 
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            
             <input
               type="email"
               name="email"
@@ -88,7 +95,7 @@ const Login = () => {
             />
 
             <button
-              type="submit" 
+              type="submit"
               className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 cursor-pointer"
             >
               Login

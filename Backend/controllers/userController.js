@@ -15,6 +15,14 @@ const generateToken=(user)=>{
   
 };
 
+
+//function to verify the user
+const verifyUser=(token)=>{
+  if(!token) return null;
+
+  return jwt.verify(token,process.env.JWT_SECRET_KEY);
+}
+
 //To register user
 const registerUser = async (req, res) => {
   try {
@@ -31,8 +39,10 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    const salt=await bcrypt.genSalt(10);
+
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
     await User.create({
@@ -62,12 +72,15 @@ const loginUser=async(req,res)=>{
 
   //now check credentials is correct or not
   const isMatch=await bcrypt.compare(password,user.password);
+
   if(!isMatch) return res.status(400).json({message:"Invalid credentials !"});
 
   //generate token
   const token=generateToken(user);
+     
 
   res.json({message:"LoggedIn Successfull !",token});
+  console.log(token);
 
   }
   catch(err){

@@ -1,67 +1,92 @@
 import React, { useState } from "react";
 import logo from "../../assets/logo.gif";
+import profile from "../../assets/people.png";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  const handleNav = (path) => {
+    navigate(path);
+    setIsOpen(false); 
+  };
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-
-       
+        
+        {/* Logo */}
         <div
           className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => handleNav("/")}
         >
           <img src={logo} alt="logo" className="w-10 h-10 object-contain" />
-          <h1 className="text-xl font-bold text-gray-800">
-            BookHeaven
-          </h1>
+          <h1 className="text-xl font-bold text-gray-800">BookHeaven</h1>
         </div>
 
-       
+        {/* Desktop Menu */}
         <ul className="hidden md:flex gap-8 font-medium text-gray-700">
-          <li onClick={() => navigate("/")} className="cursor-pointer hover:text-blue-600">Home</li>
-          <li className="cursor-pointer hover:text-blue-600">Books</li>
-          <li className="cursor-pointer hover:text-blue-600">Categories</li>
-          <li className="cursor-pointer hover:text-blue-600">Contact</li>
+          <li onClick={() => handleNav("/")} className="cursor-pointer hover:text-blue-600">Home</li>
+          <li onClick={() => handleNav("/books")} className="cursor-pointer hover:text-blue-600">Books</li>
+          <li onClick={() => handleNav("/categories")} className="cursor-pointer hover:text-blue-600">Categories</li>
+          <li onClick={() => handleNav("/contact")} className="cursor-pointer hover:text-blue-600">Contact</li>
         </ul>
 
-       
-        <div className="hidden md:flex gap-4">
-          <button
-            onClick={() => navigate("/signup")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
-          >
-            Sign Up
-          </button>
+        {/* Desktop Auth */}
+        <div className="hidden md:flex gap-4 items-center">
+          {!token ? (
+            <button
+              onClick={() => handleNav("/signup")}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Sign Up
+            </button>
+          ) : (
+            <img
+              src={profile}
+              alt="profile"
+              onClick={() => handleNav("/profile")}
+              className="h-9 w-9 rounded-full cursor-pointer hover:scale-105 transition"
+            />
+          )}
         </div>
 
-       
+        {/* Mobile Toggle */}
         <div
           className="md:hidden text-2xl cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
-          ☰
+          {isOpen ? "✕" : "☰"}
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white shadow-md px-6 py-4 space-y-4">
-          <p onClick={() => navigate("/")} className="hover:text-blue-600 cursor-pointer">Home</p>
-          <p className="hover:text-blue-600 cursor-pointer">Books</p>
-          <p className="hover:text-blue-600 cursor-pointer">Categories</p>
-          <p className="hover:text-blue-600 cursor-pointer">Contact</p>
+        <div className="md:hidden bg-white shadow-md px-6 py-4 space-y-4 font-medium text-gray-700">
+          <p onClick={() => handleNav("/")} className="hover:text-blue-600 cursor-pointer">Home</p>
+          <p onClick={() => handleNav("/books")} className="hover:text-blue-600 cursor-pointer">Books</p>
+          <p onClick={() => handleNav("/categories")} className="hover:text-blue-600 cursor-pointer">Categories</p>
+          <p onClick={() => handleNav("/contact")} className="hover:text-blue-600 cursor-pointer">Contact</p>
 
-          <button
-            onClick={() => navigate("/signup")}
-            className="w-full bg-blue-600 py-2 rounded-lg text-white cursor-pointer"
-          >
-            Sign Up
-          </button>
+          {!token ? (
+            <button
+              onClick={() => handleNav("/signup")}
+              className="w-full bg-blue-600 py-2 rounded-lg text-white"
+            >
+              Sign Up
+            </button>
+          ) : (
+            <div className="flex justify-center">
+              <img
+                src={profile}
+                alt="profile"
+                onClick={() => handleNav("/profile")}
+                className="h-9 w-9 rounded-full cursor-pointer"
+              />
+            </div>
+          )}
         </div>
       )}
     </nav>
