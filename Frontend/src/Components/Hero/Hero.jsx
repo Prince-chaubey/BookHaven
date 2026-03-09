@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-   <section className="w-full min-h-[calc(100vh-64px)] bg-gradient-to-r from-blue-50 via-white to-blue-100 flex items-center">
+   <section className="w-full flex items-center p-5">
 
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 px-6 md:px-12 items-center">
 
@@ -23,7 +23,7 @@ const Hero = () => {
               Shop Now
             </button>
 
-            <button className="border-2 border-blue-600 text-blue-600 px-7 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition">
+            <button className="border-2 border-blue-600 bg-white-500 text-blue-600 px-7 py-3 rounded-lg transition cursor-pointer">
               Browse Books
             </button>
           </div>

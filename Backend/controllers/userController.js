@@ -16,12 +16,6 @@ const generateToken=(user)=>{
 };
 
 
-//function to verify the user
-const verifyUser=(token)=>{
-  if(!token) return null;
-
-  return jwt.verify(token,process.env.JWT_SECRET_KEY);
-}
 
 //To register user
 const registerUser = async (req, res) => {
@@ -88,4 +82,28 @@ const loginUser=async(req,res)=>{
   }
 }
 
-module.exports = { registerUser,loginUser };
+
+//Authorize user
+
+const getDetails = async (req, res) => {
+   try {
+   
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      fullname: user.fullname,
+      email: user.email,
+      joined: user.createdAt || user._id.getTimestamp(), 
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+module.exports = { registerUser,loginUser,getDetails };

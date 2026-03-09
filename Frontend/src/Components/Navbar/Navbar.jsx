@@ -5,19 +5,19 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const token = localStorage.getItem("token");
+  const isLoggedIn = !!localStorage.getItem("token");
   const navigate = useNavigate();
 
   const handleNav = (path) => {
     navigate(path);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
         
-        {/* Logo */}
+       
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => handleNav("/")}
@@ -26,7 +26,7 @@ const Navbar = () => {
           <h1 className="text-xl font-bold text-gray-800">BookHeaven</h1>
         </div>
 
-        {/* Desktop Menu */}
+      
         <ul className="hidden md:flex gap-8 font-medium text-gray-700">
           <li onClick={() => handleNav("/")} className="cursor-pointer hover:text-blue-600">Home</li>
           <li onClick={() => handleNav("/books")} className="cursor-pointer hover:text-blue-600">Books</li>
@@ -34,9 +34,9 @@ const Navbar = () => {
           <li onClick={() => handleNav("/contact")} className="cursor-pointer hover:text-blue-600">Contact</li>
         </ul>
 
-        {/* Desktop Auth */}
+     
         <div className="hidden md:flex gap-4 items-center">
-          {!token ? (
+          {!isLoggedIn ? (
             <button
               onClick={() => handleNav("/signup")}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -53,7 +53,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Toggle */}
+       
         <div
           className="md:hidden text-2xl cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
@@ -62,7 +62,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+    
       {isOpen && (
         <div className="md:hidden bg-white shadow-md px-6 py-4 space-y-4 font-medium text-gray-700">
           <p onClick={() => handleNav("/")} className="hover:text-blue-600 cursor-pointer">Home</p>
@@ -70,7 +70,7 @@ const Navbar = () => {
           <p onClick={() => handleNav("/categories")} className="hover:text-blue-600 cursor-pointer">Categories</p>
           <p onClick={() => handleNav("/contact")} className="hover:text-blue-600 cursor-pointer">Contact</p>
 
-          {!token ? (
+          {!isLoggedIn ? (
             <button
               onClick={() => handleNav("/signup")}
               className="w-full bg-blue-600 py-2 rounded-lg text-white"
